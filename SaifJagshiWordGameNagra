@@ -1,0 +1,155 @@
+# Saif Jagshi
+# Anurag Nagra ICS3U1 - 3
+# Word Guessing Game
+# 03/12/2024 (Starting Date)
+
+playAgain = None # Nulling play again as it is defined later but is apart of the play again loop
+while playAgain != "N": # Creating the loop which restarts the game
+    import random # Allows python to have truly random odds as it is not apart of the syntax
+    import time # Allows python to access time which one can use to create pauses in the code
+    
+    # Color codes for loading bar
+    black   = '\033[30m'
+    red     = '\033[31m'
+    green   = '\033[32m'
+    yellow  = '\033[33m'
+    blue    = '\033[34m'
+    magenta = '\033[35m'
+    cyan    = '\033[36m'
+    white   = '\033[37m'
+    colors = [black, red, green, yellow, blue, magenta, cyan, white]
+    blackbg   = '\033[40m'
+    redbg     = '\033[41m'
+    greenbg   = '\033[42m'
+    yellowbg  = '\033[43m'
+    bluebg    = '\033[44m'
+    magentabg = '\033[45m'
+    cyanbg    = '\033[46m'
+    whitebg   = '\033[47m'
+    bgcolors = [blackbg, redbg, greenbg, yellowbg, bluebg, magentabg, cyanbg, whitebg]
+    bright = '\033[1m'
+    normal = '\033[22m'
+    reset = '\033[39m'
+    resetbg = '\033[49m'
+    print(reset + resetbg + normal)
+    
+    # Loading screen
+    print(bright + "Loading ... ")
+    time.sleep(1)
+    for i in range(100):
+        print(green + greenbg + " ", end = "")
+        time.sleep(0.02)
+    print(reset + resetbg + normal)
+    
+    # Rules / lore
+    time.sleep(1)
+    print("Welcome To Saif's Word Guessing Game!")
+    time.sleep(1)
+    print("You will be tasked with a blank word symbolized by hyphens")
+    time.sleep(1)
+    print("Each turn you will get the choice between a letter(L) or word(W).")
+    time.sleep(1)
+    print("You have 10 chances to guess letters and 3 to guess words but if you reach the limit of either")
+    time.sleep(2)
+    print(bright + red + "YOU'RE DONE")
+    time.sleep(2)
+    print(reset + normal + "You can play again after! ")
+    print(cyan)
+    
+    # Initilization
+    potentialWords = ["one", "two", "three", "four", "five"]
+    word = random.choice(potentialWords)
+    length = len(word.strip())
+    letters = []
+    for letter in word:
+        letters.append(letter)
+    blanks = ["-"] * length
+    print(blanks)
+    print("")
+    incorrectGuessCount = 0
+    incorrectWordCount = 0
+    guessedLetters = []
+    guessedWords = []
+    
+    # Game begins
+    while True:
+        try:
+            choice = input("Do you want to guess a letter or word? (L/W): ").upper()
+            if choice == "L":
+                letterGuess = input("Name a letter: ").lower()
+                if len(letterGuess) != 1:
+                    print("One letter. Try again. ")
+                    continue
+                elif not choice.isalpha():
+                    print("Enter an alphabet.")
+                    continue
+                elif letterGuess in guessedLetters:
+                    print("Try again, you already guessed this.")
+                    continue
+                elif letterGuess in letters:
+                    print(f"{letterGuess} is in the word.")
+                    guessedLetters.append(letterGuess)
+                    for i in range(length):  
+                        if letters[i] == letterGuess:
+                            blanks[i] = letterGuess
+                    print(blanks)
+                    print(f"Guessed Letters: {guessedLetters}")
+                    if not "-" in blanks:
+                        break
+                    continue
+                elif letterGuess not in letters:
+                    print(f"{letterGuess} is not in the word.")
+                    guessedLetters.append(letterGuess)
+                    print(f"Guessed Letters: {guessedLetters}")
+                    incorrectGuessCount += 1    
+                    print(f"{incorrectGuessCount}/10") 
+                    if incorrectGuessCount >= 10:
+                        break
+            if choice == "W":
+                wordGuess = input("Guess the word: ").lower()
+                if len(wordGuess) != length:
+                    print("Only as long as the word, try again. ")
+                    continue
+                elif wordGuess == word:
+                    print("Congratulations, you got it. ")
+                    print(f"The word was {word}!")
+                    break   
+                elif wordGuess in guessedWords:
+                    print("Sorry, you already guessed this, try again.")
+                    continue
+                elif wordGuess != word:
+                    print("Sorry that is not the word.")
+                    incorrectWordCount += 1
+                    guessedWords.append(wordGuess)
+                    print(guessedWords)
+                    print(f"{incorrectWordCount}/3")
+                    print(blanks)
+                    if incorrectWordCount >= 3:
+                        break  
+            else:
+                print("That is not a valid input. Try again.")
+                continue
+        except Exception as e:
+            print(e)
+            continue
+        
+    # Results based on condition     
+    if incorrectGuessCount >=10:
+        print(f"Sorry you lost. The word Was {word}.") 
+    if not "-" in blanks:
+        print(f"Congrats, you won, the word was: {word}") 
+    if incorrectWordCount >= 3:
+        print("Sorry you lost, the word was " , word) 
+    
+   # Creates an infite loop prompting the user to play again based on input
+   # If N, game ends, if Y, the nested loop is broken and the play again loop is continued/restarted
+   # Else and the nested loop continues forcing the user to enter 1 of the 2 options
+    while True:
+        playAgain = input("Play again?(Y/N): ").upper()
+        if playAgain == "N":
+            exit()
+        elif playAgain == "Y":
+            break
+        else:
+            continue
+    continue
